@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import '@/styles/index.stylus';//公共样式
 import axios from 'axios';
+import '@/icons' //Svg图标
 
 const mock=require("../mock/mock")
 
