@@ -1,22 +1,22 @@
 <template>
     <div class="login">
-        <el-form class="login-form">
+        <el-form class="login-form" ref="loginForm" :rules="rules" :model="userInfo">
             <div class="title">
                 <h2>用户后台管理系统</h2>
             </div>
-            <el-form-item class="login-form-item">
+            <el-form-item class="login-form-item" prop="username">
                 <span class="svg-container">
                     <svg-icon icon-class="user" ></svg-icon>
                 </span>
                 <el-input class="login-input login-username" v-model="userInfo.username" placeholder="Username"  autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item class="login-form-item">
+            <el-form-item class="login-form-item" prop="password">
                 <span class="svg-container">
                     <svg-icon icon-class="password" ></svg-icon>
                 </span>
                 <el-input class="login-input login-password" v-model="userInfo.password" placeholder="Password" type="password" autocomplete="off"></el-input>
             </el-form-item>
-            <el-button class="login-btn" type="primary" @click="submitForm('userInfo')">登 录</el-button>
+            <el-button class="login-btn" type="primary" @click="submitForm()" :loading=loading>登 录</el-button>
         </el-form>
     </div>
 </template>
@@ -25,18 +25,51 @@
 //import SvgIcon from '@/components/SvgIcon'
 export default {
     data() {
+        var validateUsername = (rule,value,callback) =>{
+            if(value === ""){
+                callback(new Error("账号不得为空"))
+            }else{
+                callback()
+            }
+        };
+        var validatePassword = (rule,value,callback) =>{
+            if(value === "" || value.length<6){
+                callback(new Error("密码不得小于6位数"))
+            }else{
+                callback()
+            }
+        };
         return {
             userInfo:{
                 username:"",
                 password:""
-            }
-        };
+            },
+            rules:{
+                username:[{ validator:validateUsername, trigger:'blur'}],
+                password:[{ validator:validatePassword, trigger:'blur'}]
+            },
+            loading:false
+        };     
     },
     //components:{SvgIcon},
     computed: {},
     methods: {
         submitForm(){
-            console.log("a")
+           this.$refs.loginForm.validate(valid =>{
+               if(valid){
+                   this.loading=true;
+                   this.$store.dispatch('login',this.userInfo) 
+                   .then(() => {
+                       this.$router.push("/");
+                       this.loading=false;
+                   }).catch(() => {
+                        this.$message.error('用户名或密码错误');
+                        this.loading=false;
+                   })
+               }else{
+                   return false;
+               }
+            })
         }
     },
     mounted() {},
@@ -44,8 +77,11 @@ export default {
 </script>
 <style lang='stylus'>
 //reset 
+.el-form-item__content{
+    font-size:16px;
+}
 .el-input{
-    width:85%;
+    width:88%;
     input{
         background-color:transparent;
         border:none;

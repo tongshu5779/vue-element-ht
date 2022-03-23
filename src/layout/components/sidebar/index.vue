@@ -2,40 +2,24 @@
     <div class="sidebar">
       <el-scrollbar>
           <el-menu
-            default-active="2"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose">
-            <el-submenu index="1">
+            router
+            background-color="#283443"
+            active-text-color="#1aa0dd"
+            :default-active="$route.path"
+            unique-opened
+            >
+            <el-submenu  v-for="list in sidebar" :key="list.index" :index="list.index">
                 <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>导航一</span>
+                    <svg-icon :icon-class="list.icon"/>
+                    <span>{{list.name}}</span>
                 </template>
-                <el-menu-item-group>
-                <template slot="title">分组一</template>
-                <el-menu-item index="1-1">选项1</el-menu-item>
-                <el-menu-item index="1-2">选项2</el-menu-item>
-                </el-menu-item-group>
-                <el-menu-item-group title="分组2">
-                <el-menu-item index="1-3">选项3</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                <template slot="title">选项4</template>
-                <el-menu-item index="1-4-1">选项1</el-menu-item>
-                </el-submenu>
-            </el-submenu>
-            <el-menu-item index="2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">导航二</span>
-            </el-menu-item>
-            <el-menu-item index="3" disabled>
-                <i class="el-icon-document"></i>
-                <span slot="title">导航三</span>
-            </el-menu-item>
-            <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">导航四</span>
-            </el-menu-item>
+                <!-- <el-menu-item-group v-for="item in list.children" :key="item.index" :index="item.path"> -->
+                <el-menu-item v-for="item in list.children" :key="item.index" :index="item.path">
+                    <template slot="title">{{item.name}}</template>
+                </el-menu-item>    
+               <!--  </el-menu-item-group> -->
+            </el-submenu>          
         </el-menu>
       </el-scrollbar> 
     </div>
@@ -47,28 +31,54 @@ export default {
     components: {},
     data() {
         return {
-
+            sidebar:[]
         };
     },
-    created(){
-        this.$axios.get("http://localhost:8088/getResoure").then((res)=>{
-            console.log(res)
-        })
+    beforeCreate(){
+       this.$store.dispatch("Sidebar").then((res)=>{
+           this.sidebar=res;
+       }).catch(()=>{
+
+       })
     },
-    computed: {},
-    methods: {
-        handleOpen:function(){
-            console.log("1")
-        },
-        handleClose:function(){
-            console.log("2")
-        }
-    },
-    mounted() {},
-    }
+  
+  }
 </script>
+
+<style lang='stylus'>
+/* el样式覆盖 */
+.el-submenu__title{
+    font-size:16px;
+    text-align: left;
+    color:#ccc;
+    border-bottom:1px solid rgba(210,210,210,.2);
+    .svg-icon{
+        font-size:20px;
+        margin-right:5px;
+    }
+    &:hover{
+        background: #3d4e62!important;
+    }
+}
+.el-menu-item{
+    font-size:15px;
+    color:#666;
+    text-align:left;
+    color:#ccc;
+    cursor: pointer;
+    padding:10px 0 10px 20px;
+    &:hover{
+        background: #3d4e62!important;
+    }
+}
+.el-menu{
+    background-color: transparent;
+}
+</style>
 <style lang='stylus' scoped>
 .sidebar{
-    width:20%
+    width:20%;
+    max-width:300px;
+    background-color:#283443;
 }
 </style>

@@ -23,8 +23,8 @@ export default {
             return "#icon-" + this.iconClass
         },
         svgClass(){
-            if(this.iconClass){
-                return "svg-icon" + this.iconClass;
+            if(this.className){
+                return "svg-icon" + this.className;
             }else{
                 return "svg-icon"
             }
@@ -50,6 +50,8 @@ export default {
 .svg-icon{
     overflow: hidden;
     fill:currentColor;
-    vertical-align: -0.15em;
+    width: 1em;
+    height: 1em;
+    overflow: hidden;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
     <el-container>
-        <!--<el-aside width="20%">
-                aside
-        </el-aside>-->
-        <sidebar/>
+        <sidebar>
+        </sidebar>
         <el-container>
-            <el-header height="100px">header</el-header>
+            <el-header height="70px">
+                <headerC/>
+            </el-header>
             <el-main> 
                 <router-view/>
             </el-main>
@@ -15,8 +15,9 @@
 
 <script>
 import sidebar from "./components/sidebar"
+import headerC from "./components/header"
 export default {
-    components: {sidebar},
+    components: {sidebar,headerC},
     data() {
         return {
 
@@ -31,12 +32,13 @@ export default {
 </script>
 <style  lang="stylus" scoped>
 .el-container{
+    height:100%
     .el-aside{
         background-color:rgb(48, 65, 86);
     }
     .el-container{
         .el-header{
-            border-bottom:1px solid #333;
+            border-bottom:1px solid #ccc;
         } 
     }
 }
